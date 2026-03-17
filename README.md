@@ -125,7 +125,7 @@ streamlit run app_previsao_risco.py
 ```
 
 O app abrirá automaticamente em `http://localhost:8501`
-
+> 🌐 **Ou acesse diretamente o deploy:** [https://datathon-paapps-magicos-namn62n2p8vxs6p6uycruw.streamlit.app/)
 ---
 
 ## 🔍 Funcionalidades do App
