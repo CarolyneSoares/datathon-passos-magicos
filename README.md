@@ -96,7 +96,7 @@ datathon-passos-magicos/
 | # | Modelo              | Acurácia Treino | Acurácia Teste | Diferença | Observação               |
 |---|---------------------|----------------|---------------|-----------|--------------------------|
 | 0 | Regressão Logística | 82.34%         | 79.30%        | 0.0304    | ✅ Modelo generaliza bem  |
-| 1 | SVM                 | 85.53%         | 79.69%        | 0.0584    | ✅ Modelo generaliza bem  |
+| 1 | SVM                 | 85.53%         | 79.69%        | 0.0584    | ⚠️ Possível Overfitting  |
 | 2 | **Random Forest**   | **83.73%**     | **80.86%**    | **0.0287**| ✅ **Modelo escolhido**   |
 | 3 | XGBoost             | 98.00%         | 85.55%        | 0.1246    | ⚠️ Possível Overfitting   |
 | 4 | CatBoost            | 93.61%         | 84.38%        | 0.0924    | ⚠️ Possível Overfitting   |
