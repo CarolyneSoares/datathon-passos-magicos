@@ -317,21 +317,8 @@ with st.sidebar:
         st.success(f"✅ Modelo encontrado automaticamente:\n`{os.path.basename(caminho_auto)}`")
         modelo_path = caminho_auto
     else:
-        st.warning("Modelo PKL não encontrado no diretório atual.")
+        st.error("❌ Modelo PKL não encontrado no diretório.")
         modelo_path = None
-
-    arquivo_upload = st.file_uploader(
-        "Ou carregue o modelo PKL aqui:",
-        type=["pkl"],
-        help="Selecione o arquivo random_forest_model.pkl"
-    )
-
-    if arquivo_upload:
-        tmp_path = "/tmp/modelo_carregado.pkl"
-        with open(tmp_path, "wb") as f:
-            f.write(arquivo_upload.read())
-        modelo_path = tmp_path
-        st.success("✅ Modelo carregado com sucesso!")
 
     st.markdown("---")
     st.markdown("""
@@ -537,8 +524,19 @@ if submit:
                     <div class='prob-bar-fill' style='width: {prob_pct}%; background: linear-gradient(90deg, {cor}AA, {cor})'></div>
                 </div>
             </div>
-            <div style='margin-top: 14px'>
-                <span class='chip {chip_class}'>{emoji} RISCO {nivel}</span>
+            <div style='margin-top: 20px; display: flex; justify-content: center'>
+                <span style='
+                    display: inline-block;
+                    padding: 8px 22px;
+                    border-radius: 100px;
+                    font-size: 15px;
+                    font-weight: 700;
+                    font-family: Space Mono, monospace;
+                    letter-spacing: 1px;
+                    border: 2px solid {cor};
+                    color: {cor};
+                    background: {cor}22;
+                '>{emoji} RISCO {nivel}</span>
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -553,20 +551,51 @@ if submit:
         </div>
         """, unsafe_allow_html=True)
 
+        # Calcular anos na ONG
+        anos_na_ong = ano - ano_ingresso
+        defasagem = fase - fase_ideal
+        if defasagem > 0:
+            tendencia_icon = "↑"
+            tendencia_label = "adiantado"
+        elif defasagem < 0:
+            tendencia_icon = "↓"
+            tendencia_label = "atrasado"
+        else:
+            tendencia_icon = "→"
+            tendencia_label = "no prazo"
+
         # Breakdown probabilidades
         st.markdown(f"""
         <div style='margin-top: 16px; display: flex; gap: 12px'>
-            <div class='metric-card' style='flex: 1; padding: 16px; background: #080D18; border-color: rgba(0,201,167,0.3)'>
-                <div style='font-size: 11px; color: #8FA3BF; letter-spacing: 1.5px; margin-bottom: 6px'>SEM RISCO</div>
-                <div style='font-size: 28px; font-family: Space Mono, monospace; font-weight: 700; color: #00C9A7'>{seguro_pct:.1f}%</div>
+            <div class='metric-card' style='flex: 1; padding: 16px; background: #080D18; border-color: rgba(143,163,191,0.2)'>
+                <div style='font-size: 11px; color: #8FA3BF; letter-spacing: 1.5px; margin-bottom: 6px'>ANOS NA ONG</div>
+                <div style='font-size: 28px; font-family: Space Mono, monospace; font-weight: 700; color: var(--texto)'>{anos_na_ong}</div>
+                <div style='margin-top: 10px'>
+                    <div class='prob-bar-wrap'>
+                        <div class='prob-bar-fill' style='width: {min(anos_na_ong / 15 * 100, 100):.0f}%; background: linear-gradient(90deg, #4A6080, #8FA3BF)'></div>
+                    </div>
+                    <div style='font-size: 10px; color: #4A6080; margin-top: 4px'>desde {ano_ingresso}</div>
+                </div>
             </div>
-            <div class='metric-card' style='flex: 1; padding: 16px; background: #080D18; border-color: rgba(239,35,60,0.3)'>
+            <div class='metric-card' style='flex: 1; padding: 16px; background: #080D18; border-color: rgba(143,163,191,0.2)'>
                 <div style='font-size: 11px; color: #8FA3BF; letter-spacing: 1.5px; margin-bottom: 6px'>EM RISCO</div>
-                <div style='font-size: 28px; font-family: Space Mono, monospace; font-weight: 700; color: #EF233C'>{prob_pct:.1f}%</div>
+                <div style='font-size: 28px; font-family: Space Mono, monospace; font-weight: 700; color: var(--texto)'>{prob_pct:.1f}%</div>
+                <div style='margin-top: 10px'>
+                    <div class='prob-bar-wrap'>
+                        <div class='prob-bar-fill' style='width: {prob_pct:.1f}%; background: linear-gradient(90deg, #8FA3BF55, #8FA3BF)'></div>
+                    </div>
+                    <div style='font-size: 10px; color: #4A6080; margin-top: 4px'>sem risco: {seguro_pct:.1f}%</div>
+                </div>
             </div>
-            <div class='metric-card' style='flex: 1; padding: 16px; background: #080D18; border-color: rgba(143,163,191,0.3)'>
+            <div class='metric-card' style='flex: 1; padding: 16px; background: #080D18; border-color: rgba(143,163,191,0.2)'>
                 <div style='font-size: 11px; color: #8FA3BF; letter-spacing: 1.5px; margin-bottom: 6px'>DEFASAGEM ATUAL</div>
-                <div style='font-size: 28px; font-family: Space Mono, monospace; font-weight: 700; color: {"#EF233C" if fase < fase_ideal else "#00C9A7"}'>{fase - fase_ideal:+d}</div>
+                <div style='font-size: 28px; font-family: Space Mono, monospace; font-weight: 700; color: var(--texto)'>
+                    {tendencia_icon} {defasagem:+d}
+                </div>
+                <div style='font-size: 11px; color: #8FA3BF; margin-top: 8px; line-height: 1.5'>
+                    Fase atual vs. fase ideal para a idade.<br>
+                    <span style='color: #4A6080'>{tendencia_label} · fase {fase} de {fase_ideal} esperada</span>
+                </div>
             </div>
         </div>
         """, unsafe_allow_html=True)
