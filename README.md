@@ -175,7 +175,7 @@ O app abrirá automaticamente em `http://localhost:8501`
 | Nome | RM |
 |------|----|
 | Carolyne Rafaella Soares Costa | RM361016 |
-| Natane Cezario Barbosa | RM362783 |
+| Natane Cezario Barbosa <natanecezario@gmail.com>| RM362783 |
 
 ---
 
